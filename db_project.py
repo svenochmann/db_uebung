@@ -41,6 +41,7 @@ class Sampler():
 
     def convAD(self, T):
         #T Aufnahme zeit in sekunden
+        #NICHT FERTIG
         for  i in range(T):
             Sampler.adc.duty_u16()
         yield
@@ -61,7 +62,7 @@ class Sampler():
         gen = self.convAD(T)
 
         self.conv = True
-        #Converten
+        #Converten NICHT FERTIG
 
 
 if __name__ == "__main__":
