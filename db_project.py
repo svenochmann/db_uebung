@@ -1,13 +1,9 @@
-#
-##Der Abgegebene Code ist nicht Fertig.
-#
 import machine
 import time
 from machine import Pin, PWM, Timer, ADC
 import math
 
-def sinus_gen():
-    return None
+
 
 
 class Sampler():
@@ -42,10 +38,20 @@ class Sampler():
     def convAD(self, T):
         #T Aufnahme zeit in sekunden
         #NICHT FERTIG
-        for  i in range(T):
-            Sampler.adc.duty_u16()
-        yield
+        #for i in range(int(self.fs * T)):
+         #   value = Sampler.adc.read_u16()  # Read the ADC value
+          #  Sampler.samples.append(value)  # Append the value to the samples list
+        #yield
+        
+        st = time.ticks_ms()
+        while time.ticks_diff(time.ticks_ms(),st) <(T*1000):
+            value=self.adc.read()
+            Sampler.samples.append(value)
+            yield
 
+
+
+    
     def handler(self, gen):
         try:
             next(gen)  # Nächstes Sample aus dem Generator abrufen
@@ -58,11 +64,23 @@ class Sampler():
         self.conv = True
         Sampler.tim.init(mode=Timer.PERIODIC, freq=self.fs, callback=lambda t: self.handler(gen))
         # Timer initialisieren: periodischer Modus, Frequenz fs, Callback-Funktion verwenden
+    
+    
     def startAD(self, T):
         gen = self.convAD(T)
 
         self.conv = True
+        Sampler.tim.init(mode=Timer.PERIODIC, freq=self.fs, callback=lambda t: self.handler(gen))
         #Converten NICHT FERTIG
+
+
+def sinus_sound():
+    return None
+
+
+
+
+
 
 
 if __name__ == "__main__":
