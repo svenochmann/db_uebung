@@ -2,9 +2,9 @@ import machine
 import time
 from machine import Pin, PWM, Timer, ADC
 import math
+import gc
 
-
-
+# region Sampler
 
 class Sampler:
     # Klassenvariablen
@@ -37,9 +37,7 @@ class Sampler:
 
     def convAD(self, T):
         #T Aufnahme zeit in sekunden
-        #NICHT FERTIG
-        
-        
+                
         st = time.ticks_ms()
         while time.ticks_diff(time.ticks_ms(),st) <(T*1000):
             value=self.adc.read()
@@ -69,32 +67,28 @@ class Sampler:
         self.conv = True
         Sampler.tim.init(mode=Timer.PERIODIC, freq=self.fs, callback=lambda t: self.handler(gen))
         #Converten NICHT FERTIG
+# endregion
 
 
-def sinus_sound():
+
+# region Main
+def sinus_sound(fs, freq, amp, dur):
     #Aufgabe 4 B:
-    #Folgend sollte noch der Code der die Sinus-töne erstellt dies wurde zeitlich nicht mehr geschaft.
+    #Erstellt ein Sinus Signal
+    #Return Sample liste die eine Sinuscurve wiederspiegelt
+    sample_list  = []
+    num_samples = int(fs * dur)
     
-
-    return None
-
-
-
-
+    for i in range(num_samples):
+        sample = int(amp * math.sin(2 * math.pi * freq * i / fs) + amp)
+        sample_list.append(sample)
+    return sample_list
 
 
 
-if __name__ == "__main__":
-    
-
-
-
-    #Vorgabe uebung_5
-    import gc
+def uebung_5(fs, T):
     gc.collect()
     print ("Freier Speicher: {0}KiB".format(gc.mem_free()/1024))     
-    fs =2000 #sample freq     
-    T = 3#record time in sec     
     sampler=Sampler(fs)     
     for wait in range(3,0,-1):         
         print("Sampling starts in {0} seconds...".format(wait))         
@@ -118,3 +112,32 @@ if __name__ == "__main__":
         print("Done.")         
         time.sleep(2)
     
+
+
+
+
+if __name__ == "__main__":
+    
+    
+    
+    #Aufgabe 4:
+    """
+    fs = 6000
+    sampler = Sampler(fs)
+    freq = 100
+    amp = 32768
+    dur=1
+    sample_list=sinus_sound(fs, freq, amp,dur)
+    Sampler.samples = sample_list
+    sampler.startDA()
+    """
+
+
+
+    #Aufgabe 5:
+    """
+    fs = 5000
+    T = 3
+    uebung_5(fs, T)
+    """
+#endregion
