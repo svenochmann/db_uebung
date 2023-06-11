@@ -6,7 +6,7 @@ import math
 
 
 
-class Sampler():
+class Sampler:
     # Klassenvariablen
     tim = Timer(0)  
     samples = []    
@@ -31,17 +31,14 @@ class Sampler():
 
     def convDA(self):
         for duty in Sampler.samples:
-            Sampler.pwm_pin.duty_u16(duty)  # Duty für das PWM-Signal einstellen
+            self.pwm_pin.duty_u16(duty)  # Duty für das PWM-Signal einstellen
             yield  
 
 
     def convAD(self, T):
         #T Aufnahme zeit in sekunden
         #NICHT FERTIG
-        #for i in range(int(self.fs * T)):
-         #   value = Sampler.adc.read_u16()  # Read the ADC value
-          #  Sampler.samples.append(value)  # Append the value to the samples list
-        #yield
+        
         
         st = time.ticks_ms()
         while time.ticks_diff(time.ticks_ms(),st) <(T*1000):
@@ -75,6 +72,10 @@ class Sampler():
 
 
 def sinus_sound():
+    #Aufgabe 4 B:
+    #Folgend sollte noch der Code der die Sinus-töne erstellt dies wurde zeitlich nicht mehr geschaft.
+    
+
     return None
 
 
@@ -84,12 +85,7 @@ def sinus_sound():
 
 
 if __name__ == "__main__":
-    #fs = 5000
-    #sampler = Sampler(fs)  # Sampler-Objekt mit Abtastfrequenz 5000 Hz erstellen
-    #Aufgabe 4 B:
-    #Folgend sollte noch der Code der die Sinus-töne erstellt dies wurde zeitlich nicht mehr geschaft.
     
-
 
 
 
@@ -97,14 +93,14 @@ if __name__ == "__main__":
     import gc
     gc.collect()
     print ("Freier Speicher: {0}KiB".format(gc.mem_free()/1024))     
-    fs =6000 #sample freq     
-    T = 5#record time in sec     
+    fs =2000 #sample freq     
+    T = 3#record time in sec     
     sampler=Sampler(fs)     
     for wait in range(3,0,-1):         
         print("Sampling starts in {0} seconds...".format(wait))         
         time.sleep(1)   
 
-    sampler.startAD(T)     
+    #sampler.startAD(T)     
     print("Recording...")     
     start_ticks = time.ticks_ms()     
     sampler.startAD(T)     
